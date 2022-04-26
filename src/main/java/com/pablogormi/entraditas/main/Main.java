@@ -8,8 +8,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.awt.Desktop;
-import com.pablogormi.entraditas.verifiers.JWVerifier;
-import com.pablogormi.entraditas.verifiers.Verifier;
+
+import com.pablogormi.entraditas.verifiers.BasicWebVerifier;
 
 public class Main {
     //Update time in TIME_UNIT units
@@ -21,14 +21,14 @@ public class Main {
 
     public static final ScheduledExecutorService service = Executors.newScheduledThreadPool(2);
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         log("Starting program...");
-        JWVerifier verifier = new JWVerifier();
+        BasicWebVerifier verifier = new BasicWebVerifier("example.com", new String[]{"example", ".com"});
         log("Enabling main timer...");
         service.scheduleAtFixedRate(() -> {
             if (verifier.isAgotado()) {
-                log("Agotado, reintentado en " + DELAY + " " + TIME_UNIT.toString());
+                log("Agotado, reintentado en " + DELAY + " " + TIME_UNIT);
             } else {
                 log("-+-+-+-+-+-+-+AVISO+-+-+-+-+-+-+-+-");
                 log("ESTO NO ES UN SIMULACRO, NO AGOTADO");
@@ -36,7 +36,7 @@ public class Main {
                 log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-");
                 if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
                     try {
-                        Desktop.getDesktop().browse(new URI(JWVerifier.URL));
+                        Desktop.getDesktop().browse(new URI(verifier.getURL()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

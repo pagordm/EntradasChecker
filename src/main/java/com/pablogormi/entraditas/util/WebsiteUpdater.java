@@ -2,11 +2,13 @@ package com.pablogormi.entraditas.util;
 
 import com.pablogormi.entraditas.main.Main;
 
+import java.util.concurrent.Future;
+
 public class WebsiteUpdater {
 
-    private StringWrapper website_content = new StringWrapper();
+    private final StringWrapper website_content = new StringWrapper();
+    private Future<?> task;
     private volatile boolean stop = false;
-    private static final long WAIT_TIME = 300;
 
     public WebsiteUpdater() {
 
@@ -15,7 +17,7 @@ public class WebsiteUpdater {
     public void startTracking(String url) {
         this.stop = false;
         ServerGetter s = new ServerGetter();
-        Main.service.scheduleAtFixedRate(() -> {
+        this.task = Main.service.scheduleAtFixedRate(() -> {
             Main.debug("Updating website content.");
             String newcontent = s.getURL(url);
             Main.debug("Finished updating website content");
@@ -27,6 +29,7 @@ public class WebsiteUpdater {
 
     public void stopTracking() {
         this.stop = true;
+        this.task.cancel(true);
     }
 
     public String getWebsite_content() {
