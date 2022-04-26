@@ -1,13 +1,20 @@
 package com.pablogormi.entraditas.verifiers;
 
 import com.pablogormi.entraditas.main.Main;
+import com.pablogormi.entraditas.util.ValidateType;
 import com.pablogormi.entraditas.util.WebsiteUpdater;
 
 public class BasicWebVerifier extends BasicVerifier {
     public final String URL;
     //public String content;
     WebsiteUpdater updater;
+    ValidateType validateType = ValidateType.MATCH_ANY;
 
+    /**
+     * Starts a new BasicWebVerifier
+     * @param url the url to check
+     * @param patterns a list of patterns to check for matches
+     */
     public BasicWebVerifier(String url, String[] patterns) {
         super(patterns);
         Main.log("Started Web Verifier");
@@ -18,9 +25,26 @@ public class BasicWebVerifier extends BasicVerifier {
         Main.log("Finished enabling tracker");
     }
 
+    /**
+     * Sets the method of validation used to match the patterns.
+     * @param type one of ValidateType's options.
+     */
+    public void setValidateType(ValidateType type) {
+        this.validateType=type;
+    }
+
     public boolean isAgotado() {
         Main.debug("Call to isAgotado");
-        return !this.matchAll(this.getWebsite());
+        switch (this.validateType) {
+            case MATCH_ALL -> {
+                return !this.matchAll(this.getWebsite());
+            }
+            case MATCH_ANY -> {
+                return !this.anyMatch();
+            }
+        }
+        Main.log("CRITICAL ERROR - THE VALIDATETYPE IS NOT VALID. ");
+        return true; //unreachable in normal circumstances.
     }
 
     public String getWebsite() {

@@ -10,6 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.awt.Desktop;
 
+import com.pablogormi.entraditas.util.ValidateType;
 import com.pablogormi.entraditas.verifiers.BasicWebVerifier;
 
 public class Main {
@@ -26,6 +27,7 @@ public class Main {
 
         log("Starting program...");
         BasicWebVerifier verifier = new BasicWebVerifier("https://www.entradascajarural.com/", new String[]{"barras", "plaza de toros", "bono"});
+        verifier.setValidateType(ValidateType.MATCH_ANY);
         log("Enabling main timer...");
         service.scheduleAtFixedRate(() -> {
             if (verifier.isAgotado()) {
