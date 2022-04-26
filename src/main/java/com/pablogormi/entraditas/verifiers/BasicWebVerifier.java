@@ -37,5 +37,8 @@ public class BasicWebVerifier extends BasicVerifier {
         return this.anyMatch(this.getWebsite());
     }
 
-
+    public boolean isError() {
+        Main.debug("isError invoked");
+        return this.getWebsite().equals("ERROR");
+    }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -24,11 +25,14 @@ public class Main {
     public static void main(String[] args) {
 
         log("Starting program...");
-        BasicWebVerifier verifier = new BasicWebVerifier("example.com", new String[]{"example", ".com"});
+        BasicWebVerifier verifier = new BasicWebVerifier("https://www.entradascajarural.com/", new String[]{"barras", "plaza de toros", "bono"});
         log("Enabling main timer...");
         service.scheduleAtFixedRate(() -> {
             if (verifier.isAgotado()) {
-                log("Agotado, reintentado en " + DELAY + " " + TIME_UNIT);
+                if (verifier.isError())
+                    log("Error al acceder a la URL. Reintentando en " + DELAY + " " + TIME_UNIT.toString().toLowerCase());
+                else
+                    log("Agotado, reintentando en " + DELAY + " " + TIME_UNIT);
             } else {
                 log("-+-+-+-+-+-+-+AVISO+-+-+-+-+-+-+-+-");
                 log("ESTO NO ES UN SIMULACRO, NO AGOTADO");

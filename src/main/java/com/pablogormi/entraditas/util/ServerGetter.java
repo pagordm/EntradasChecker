@@ -4,6 +4,7 @@ import com.pablogormi.entraditas.main.Main;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 
 public class ServerGetter {
     private final OkHttpClient client = new OkHttpClient();
